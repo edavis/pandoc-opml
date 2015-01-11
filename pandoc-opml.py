@@ -49,16 +49,20 @@ class PandocOPML(object):
                     self.el = obj.get('t')
 
                 elif obj.get('t') == 'BulletList':
-                    last_el = self.el[:] # make a copy
-                    for element in obj.get('c'):
-                        if last_el != 'Para': self.depth += 1
-                        inner(element)
-                        if last_el != 'Para': self.depth -= 1
+                    if self.el in {'Header', 'Para'}:
+                        for element in obj.get('c'):
+                            inner(element)
+                    else:
+                        self.depth += 1
+                        for element in obj.get('c'):
+                            inner(element)
+                        self.depth -= 1
 
                 elif obj.get('t') == 'Header':
                     level, attr, content = obj.get('c')
                     outline_attr = self.extract_header_attributes(attr)
                     node = Node(self.extract(content), outline_attr)
+                    self.depth = level - 1
 
                     try:
                         nodes[self.depth].append(node)
