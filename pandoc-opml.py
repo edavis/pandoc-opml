@@ -29,12 +29,17 @@ class PandocOPML(object):
 
     def parse(self):
         nodes = []
+        depth = 0
 
-        def inner(content, depth = 0):
+        def inner(content):
             for obj in content:
                 if obj.get('t') == 'BulletList':
+
+                    depth += 1
                     for element in obj.get('c'):
-                        inner(element, depth + 1)
+                        inner(element)
+                    depth -= 1
+
                 elif obj.get('t') in {'Plain', 'Para'}:
                     node = Node(self.extract(obj.get('c')))
 
@@ -47,6 +52,23 @@ class PandocOPML(object):
                         # minus 2 to make it zero-indexed and then get the parent
                         parent = nodes[depth - 2][-1]
                         parent.append(node)
+
+                elif obj.get('t') == 'Header':
+                    level, attr, content = obj.get('c')
+                    node = Node(self.extract(content))
+                    depth = level
+
+                    try:
+                        nodes[depth - 1].append(node)
+                    except IndexError:
+                        nodes.append([node])
+
+                    if (depth - 1) > 0:
+                        parent = nodes[depth - 2][-1]
+                        parent.append(node)
+
+                    # the next elements are children of this header
+                    depth += 1
 
         inner(self.body)
 
