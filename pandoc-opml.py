@@ -24,6 +24,7 @@ class Node(object):
 class PandocOPML(object):
     def __init__(self):
         self.head, self.body = json.loads(sys.stdin.read())
+        self.head = self.head['unMeta']
         self.nodes = self.parse()
 
     def parse(self):
@@ -64,6 +65,21 @@ class PandocOPML(object):
 
         def header(key, value):
             ET.SubElement(head, key).text = value
+
+        if 'title' in self.head:
+            header('title', self.extract(self.head['title']['c']))
+
+        if 'description' in self.head:
+            header('description', self.extract(self.head['description']['c']))
+
+        if 'author' in self.head:
+            header('ownerName', self.extract(self.head['author']['c']))
+
+        if 'email' in self.head:
+            header('ownerEmail', self.extract(self.head['email']['c']))
+
+        if 'date' in self.head:
+            header('dateCreated', self.extract(self.head['date']['c']))
 
         header('dateModified', now)
         header('generator', 'https://github.com/edavis/pandoc-opml')
