@@ -2,6 +2,7 @@
 
 import sys
 import json
+from xml.etree import ElementTree as ET
 
 class Node(object):
     def __init__(self, text):
@@ -42,41 +43,34 @@ class PandocOPML(object):
         return nodes
 
     def write(self, output):
-        output = open(output, 'w') if output else sys.stdout
-
-        def process(node, depth = 1):
+        def process(parent, node):
             for child in node.children:
-                output.write((' ' * depth * 2) + child.text + '\n')
-                process(child, depth + 1)
+                el = ET.SubElement(parent, 'outline', text=child.text)
+                process(el, child)
+
+        root = ET.Element('opml', version='2.0')
+        head = ET.SubElement(root, 'head')
+        body = ET.SubElement(root, 'body')
 
         for summit in self.nodes.pop(0):
-            output.write(summit.text + '\n')
-            process(summit)
+            el = ET.SubElement(body, 'outline', text=summit.text)
+            process(el, summit)
 
-        output.flush()
+        content = ET.ElementTree(root)
+        content.write(
+            open(output, 'wb') if output else sys.stdout,
+            encoding = 'UTF-8',
+            xml_declaration = True,
+        )
 
     def extract(self, contents):
         ret = []
         for obj in contents:
             if obj.get('t') == 'Str':
-                ret.append(self.escape(obj.get('c')))
+                ret.append(obj.get('c'))
             elif obj.get('t') == 'Space':
                 ret.append(' ')
-            else:
-                ret.append('!!!')
         return ''.join(ret)
-
-    def escape(self, s):
-        reps = [
-            ('"', '&quot;'),
-            ('&', '&amp;'),
-            ("'", '&apos;'),
-            ('<', '&lt;'),
-            ('>', '&gt;'),
-        ]
-        for char, rep in reps:
-            s = s.replace(char, rep)
-        return s
 
 if __name__ == '__main__':
     import argparse
