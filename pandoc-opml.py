@@ -164,6 +164,14 @@ class PandocOPML(object):
                 ret.append(obj.get('c'))
             elif obj.get('t') == 'Space':
                 ret.append(' ')
+            elif obj.get('t') == 'Link':
+                content, (link_url, link_title) = obj.get('c')
+                text = self.extract(content)
+                if link_title:
+                    ret.append(r'<a href="%s" title="%s">%s</a>' % (link_url, link_title, text))
+                else:
+                    ret.append(r'<a href="%s">%s</a>' % (link_url, text))
+
         return ''.join(ret)
 
 if __name__ == '__main__':
