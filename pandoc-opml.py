@@ -27,49 +27,51 @@ class PandocOPML(object):
         self.head, self.body = json.loads(sys.stdin.read())
         self.head = self.head['unMeta']
         self.depth = 0
+        self.el = None
         self.nodes = self.parse()
 
     def parse(self):
         nodes = []
         def inner(content):
             for obj in content:
-                if obj.get('t') == 'BulletList':
-
-                    self.depth += 1
-                    for element in obj.get('c'):
-                        inner(element)
-                    self.depth -= 1
-
-                elif obj.get('t') in {'Plain', 'Para'}:
+                if obj.get('t') in {'Para', 'Plain'}:
                     node = Node(self.extract(obj.get('c')))
 
                     try:
-                        nodes[self.depth - 1].append(node)
+                        nodes[self.depth].append(node)
                     except IndexError:
                         nodes.append([node])
 
-                    if (self.depth - 1) > 0:
-                        # minus 2 to make it zero-indexed and then get the parent
-                        parent = nodes[self.depth - 2][-1]
+                    if self.depth > 0:
+                        parent = nodes[self.depth - 1][-1]
                         parent.append(node)
+
+                    self.el = obj.get('t')
+
+                elif obj.get('t') == 'BulletList':
+                    last_el = self.el[:] # make a copy
+                    for element in obj.get('c'):
+                        if last_el != 'Para': self.depth += 1
+                        inner(element)
+                        if last_el != 'Para': self.depth -= 1
 
                 elif obj.get('t') == 'Header':
                     level, attr, content = obj.get('c')
                     outline_attr = self.extract_header_attributes(attr)
                     node = Node(self.extract(content), outline_attr)
-                    self.depth = level
 
                     try:
-                        nodes[self.depth - 1].append(node)
+                        nodes[self.depth].append(node)
                     except IndexError:
                         nodes.append([node])
 
-                    if (self.depth - 1) > 0:
-                        parent = nodes[self.depth - 2][-1]
+                    if self.depth > 0:
+                        parent = nodes[self.depth - 1][-1]
                         parent.append(node)
 
                     # the next elements are children of this header
                     self.depth += 1
+                    self.el = 'Header'
 
         inner(self.body)
         return nodes
