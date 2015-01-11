@@ -4,12 +4,23 @@ import sys
 import json
 import pprint
 
+def escape(s):
+    reps = [
+        ('"', '&quot;'),
+        ('&', '&amp;'),
+        ("'", '&apos;'),
+        ('<', '&lt;'),
+        ('>', '&gt;'),
+    ]
+    for char, rep in reps:
+        s = s.replace(char, rep)
+    return s
 
 def extract(contents):
     ret = []
     for obj in contents:
         if obj.get('t') == 'Str':
-            ret.append(obj.get('c'))
+            ret.append(escape(obj.get('c')))
         elif obj.get('t') == 'Space':
             ret.append(' ')
         else:
