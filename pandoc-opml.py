@@ -93,7 +93,14 @@ class PandocOPML(object):
             header('description', self.extract(self.head['description']['c']))
 
         if 'author' in self.head:
-            header('ownerName', self.extract(self.head['author']['c']))
+            # Markdown returns a MetaList of MetaInlines while org-mode returns MetaInlines.
+            authors = []
+            if self.head['author'].get('t') == 'MetaList':
+                for author in self.head['author']['c']:
+                    authors.append(self.extract(author['c']))
+            elif self.head['author'].get('t') == 'MetaInlines':
+                authors = [self.extract(self.head['author']['c'])]
+            header('ownerName', ', '.join(authors))
 
         if 'email' in self.head:
             header('ownerEmail', self.extract(self.head['email']['c']))
