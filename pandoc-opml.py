@@ -14,8 +14,9 @@ def gmt(s=None):
     return d.strftime('%a, %d %b %Y %H:%M:%S') + ' GMT'
 
 class Node(object):
-    def __init__(self, text):
+    def __init__(self, text, attr=None):
         self.text = text
+        self.attr = attr or {}
         self.children = []
 
     def append(self, node):
@@ -54,7 +55,8 @@ class PandocOPML(object):
 
                 elif obj.get('t') == 'Header':
                     level, attr, content = obj.get('c')
-                    node = Node(self.extract(content))
+                    outline_attr = self.extract_header_attributes(attr)
+                    node = Node(self.extract(content), outline_attr)
                     self.depth = level
 
                     try:
@@ -75,7 +77,9 @@ class PandocOPML(object):
     def write(self, output):
         def process(parent, node):
             for child in node.children:
-                el = ET.SubElement(parent, 'outline', text=child.text)
+                params = {'text': child.text}
+                params.update(child.attr)
+                el = ET.SubElement(parent, 'outline', **params)
                 process(el, child)
 
         root = ET.Element('opml', version='2.0')
@@ -116,7 +120,9 @@ class PandocOPML(object):
         root.insert(0, generated)
 
         for summit in self.nodes.pop(0):
-            el = ET.SubElement(body, 'outline', text=summit.text)
+            params = {'text': summit.text}
+            params.update(summit.attr)
+            el = ET.SubElement(body, 'outline', **params)
             process(el, summit)
 
         content = ET.ElementTree(root)
@@ -125,6 +131,16 @@ class PandocOPML(object):
             encoding = 'UTF-8',
             xml_declaration = True,
         )
+
+    def extract_header_attributes(self, attr):
+        outline_attr = {}
+        name, args, kwargs = attr
+        if name:
+            outline_attr['name'] = name
+        for arg in args:
+            outline_attr[arg] = 'true'
+        outline_attr.update(dict(kwargs))
+        return outline_attr
 
     def extract(self, contents):
         ret = []
