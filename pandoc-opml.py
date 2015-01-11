@@ -4,7 +4,6 @@ import sys
 import json
 import pprint
 
-head, body = json.loads(sys.stdin.read())
 
 def extract(contents):
     ret = []
@@ -55,5 +54,7 @@ def parse(content, depth = 0):
                 parent = nodes[depth - 2][-1]
                 parent.append(node)
 
-parse(body)
-build(nodes)
+if __name__ == '__main__':
+    head, body = json.loads(sys.stdin.read())
+    parse(body)
+    build(nodes)
