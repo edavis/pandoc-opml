@@ -50,9 +50,18 @@ class PandocOPML(object):
 
                 elif obj.get('t') == 'BulletList':
                     if self.el in {'Header', 'Para'}:
+                        # Don't increase the depth when a BulletList
+                        # follows a Header or Para object.
+                        #
+                        # If the last object was Header, it has
+                        # already incremented the depth.
                         for element in obj.get('c'):
                             inner(element)
                     else:
+                        # But do increase the depth when a BulletList
+                        # follows anything else.
+                        #
+                        # This makes nested BulletLists work.
                         self.depth += 1
                         for element in obj.get('c'):
                             inner(element)
