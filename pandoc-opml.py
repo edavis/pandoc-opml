@@ -35,7 +35,7 @@ class PandocOPML(object):
                 if obj.get('t') == 'BulletList':
                     for element in obj.get('c'):
                         inner(element, depth + 1)
-                elif obj.get('t') == 'Plain':
+                elif obj.get('t') in {'Plain', 'Para'}:
                     node = Node(self.extract(obj.get('c')))
 
                     try:
