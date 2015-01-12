@@ -1,0 +1,43 @@
+#+TITLE: NBA Teams
+#+AUTHOR: Eric Davis
+#+EMAIL: eric@davising.com
+#+DESCRIPTION: List of all NBA teams
+
+* Eastern Conference
+** Atlantic Division
+- Boston Celtics
+- Brooklyn Nets
+- New York Knicks
+- Philadelphia 76ers
+- Toronto Raptors
+** Central Division
+- Chicago Bulls
+- Cleveland Cavaliers
+- Detroit Pistons
+- Indiana Pacers
+- Milwaukee Bucks
+** Southeast Division
+- Atlanta Hawks
+- Charlotte Bobcats
+- Miami Heat
+- Orlando Magic
+- Washington Wizards
+* Western Conference
+** Southwest Division
+- Dallas Mavericks
+- Houston Rockets
+- Memphis Grizzlies
+- New Orleans Pelicans
+- San Antonio Spurs
+** Northwest Division
+- Denver Nuggets
+- Minnesota Timberwolves
+- Portland Trail Blazers
+- Oklahoma City Thunder
+- Utah Jazz
+** Pacific Division
+- Golden State Warriors
+- Los Angeles Clippers
+- Los Angeles Lakers
+- Phoenix Suns
+- Sacramento Kings
