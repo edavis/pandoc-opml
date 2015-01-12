@@ -3,6 +3,7 @@
 import sys
 import json
 import time
+import itertools
 from datetime import datetime
 from xml.etree import ElementTree as ET
 
@@ -47,6 +48,26 @@ class PandocOPML(object):
                         parent.append(node)
 
                     self.el = obj.get('t')
+
+                elif obj.get('t') == 'OrderedList':
+                    info, contents = obj.get('c')
+                    counter = itertools.count(info[0])
+                    if self.el in {'Header', 'Para'} or self.el is None:
+                        for element in contents:
+                            inner(element)
+                            n = nodes[self.depth][-1] # most recently added node
+                            c = next(counter)
+                            n.attr['ordinal'] = str(c)
+                            n.text = '%d) %s' % (c, n.text)
+                    else:
+                        self.depth += 1
+                        for element in contents:
+                            inner(element)
+                            n = nodes[self.depth][-1]
+                            c = next(counter)
+                            n.attr['ordinal'] = str(c)
+                            n.text = '%d) %s' % (c, n.text)
+                        self.depth -= 1
 
                 elif obj.get('t') == 'BulletList':
                     if self.el in {'Header', 'Para'} or self.el is None:
