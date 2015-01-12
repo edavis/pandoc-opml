@@ -62,7 +62,7 @@ $ pandoc -t json test.md | ./pandoc-opml.py -o test.opml && xmllint -format test
 $
 ```
 
-Generating the OPML is still a bit rough but I hope to eventually
+The command line invocation is a bit rough, but I hope to eventually
 polish it up.
 
 [OPML]: http://dev.opml.org/spec2.html
