@@ -17,7 +17,7 @@ directly.
 
 The hardest part I knew was going to be parsing the plain text input
 files. Looking for alternatives to writing that code myself, I found
-[pandoc][] and was thrilled to see it provided access to the abstract
+pandoc and was thrilled to see it provided access to the abstract
 syntax tree (AST) that represented the input file's headers,
 paragraphs, list items, etc. Plus, by using pandoc, I could write the
 input files in any of the [many file formats it understands][inputs].
