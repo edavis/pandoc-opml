@@ -4,12 +4,9 @@ pandoc-opml
 pandoc-opml is a utility that generates [OPML][] files with the help
 of [pandoc][].
 
-I've long been interested in OPML as a file format, but was never
-happy with the available desktop OPML editors. They were either
-outdated, didn't run on a Mac, or wouldn't let me set outline
-attributes. Dave Winer's pair of web-based outliners (LittleOutliner
-and Fargo) weren't bad, but I was looking for something to run on the
-desktop as opposed to the browser.
+I've long been interested in OPML as a file format, but I was always
+more comfortable using a text editor than any of the available OPML
+editors.
 
 So I started toying with the idea of using a regular text editor and
 exporting plain text files to OPML instead of editing OPML
