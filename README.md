@@ -15,7 +15,7 @@ So I started toying with the idea of using a regular text editor and
 exporting plain text files to OPML instead of editing OPML
 directly.
 
-The hardest part I knew was going to be parsing the plain text input
+I knew the hardest part was going to be parsing the plain text input
 files. Looking for alternatives to writing that code myself, I found
 pandoc and was thrilled to see it provided access to the abstract
 syntax tree (AST) that represented the input file's headers,
