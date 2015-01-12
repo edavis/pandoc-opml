@@ -1,9 +1,8 @@
-#!/usr/bin/env python
-
 import sys
 import json
 import time
 import itertools
+import subprocess
 from datetime import datetime
 from xml.etree import ElementTree as ET
 
@@ -24,8 +23,11 @@ class Node(object):
         self.children.append(node)
 
 class PandocOPML(object):
-    def __init__(self):
-        self.head, self.body = json.loads(sys.stdin.read())
+    def __init__(self, json_ast=None):
+        if json_ast is None:
+            self.head, self.body = json.loads(sys.stdin.read())
+        else:
+            self.head, self.body = json.loads(json_ast)
         self.head = self.head['unMeta']
         self.depth = 0
         self.el = None
@@ -208,11 +210,14 @@ class PandocOPML(object):
 
         return ''.join(ret)
 
-if __name__ == '__main__':
+def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--output')
+    parser.add_argument('input')
     args = parser.parse_args()
 
-    p = PandocOPML()
+    json_ast = subprocess.check_output(['pandoc', '-t', 'json', args.input])
+
+    p = PandocOPML(json_ast)
     p.write(args.output)
