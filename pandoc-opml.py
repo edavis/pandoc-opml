@@ -49,7 +49,7 @@ class PandocOPML(object):
                     self.el = obj.get('t')
 
                 elif obj.get('t') == 'BulletList':
-                    if self.el in {'Header', 'Para'}:
+                    if self.el in {'Header', 'Para'} or self.el is None:
                         # Don't increase the depth when a BulletList
                         # follows a Header or Para object.
                         #
