@@ -191,6 +191,14 @@ class PandocOPML(object):
 
     def extract(self, contents):
         ret = []
+        html_map = {
+            'Emph': 'em',
+            'Strong': 'strong',
+            'Subscript': 'sub',
+            'Superscript': 'sup',
+            'Strikeout': 'del',
+        }
+
         for obj in contents:
             if obj.get('t') == 'Str':
                 ret.append(obj.get('c'))
@@ -203,16 +211,11 @@ class PandocOPML(object):
                     ret.append(r'<a href="%s" title="%s">%s</a>' % (link_url, link_title, text))
                 else:
                     ret.append(r'<a href="%s">%s</a>' % (link_url, text))
-            elif obj.get('t') == 'Emph':
-                ret.append(r'<em>%s</em>' % self.extract(obj.get('c')))
-            elif obj.get('t') == 'Strong':
-                ret.append(r'<strong>%s</strong>' % self.extract(obj.get('c')))
-            elif obj.get('t') == 'Subscript':
-                ret.append(r'<sub>%s</sub>' % self.extract(obj.get('c')))
-            elif obj.get('t') == 'Superscript':
-                ret.append(r'<sup>%s</sup>' % self.extract(obj.get('c')))
-            elif obj.get('t') == 'Strikeout':
-                ret.append(r'<del>%s</del>' % self.extract(obj.get('c')))
+            elif obj.get('t') in html_map:
+                tag = html_map[obj.get('t')]
+                ret.append(
+                    r'<%s>%s</%s>' % (tag, self.extract(obj.get('c')), tag)
+                )
             elif obj.get('t') == 'Code':
                 (_, code) = obj.get('c')
                 ret.append(r'<code>%s</code>' % code)
