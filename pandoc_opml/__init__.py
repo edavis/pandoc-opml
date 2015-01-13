@@ -60,9 +60,8 @@ class PandocOPML(object):
                         for element in contents:
                             inner(element)
                             n = nodes[self.depth][-1] # most recently added node
-                            c = next(counter)
                             n.attr.update({
-                                'ordinal': str(c),
+                                'ordinal': str(next(counter)),
                                 'list': 'ordered',
                             })
                     else:
@@ -70,9 +69,8 @@ class PandocOPML(object):
                         for element in contents:
                             inner(element)
                             n = nodes[self.depth][-1]
-                            c = next(counter)
                             n.attr.update({
-                                'ordinal': str(c),
+                                'ordinal': str(next(counter)),
                                 'list': 'ordered',
                             })
                         self.depth -= 1
