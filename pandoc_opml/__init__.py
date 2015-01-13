@@ -59,16 +59,20 @@ class PandocOPML(object):
                             inner(element)
                             n = nodes[self.depth][-1] # most recently added node
                             c = next(counter)
-                            n.attr['ordinal'] = str(c)
-                            n.text = '%d) %s' % (c, n.text)
+                            n.attr.update({
+                                'ordinal': str(c),
+                                'list': 'ordered',
+                            })
                     else:
                         self.depth += 1
                         for element in contents:
                             inner(element)
                             n = nodes[self.depth][-1]
                             c = next(counter)
-                            n.attr['ordinal'] = str(c)
-                            n.text = '%d) %s' % (c, n.text)
+                            n.attr.update({
+                                'ordinal': str(c),
+                                'list': 'ordered',
+                            })
                         self.depth -= 1
 
                 elif obj.get('t') == 'BulletList':
@@ -80,6 +84,8 @@ class PandocOPML(object):
                         # already incremented the depth.
                         for element in obj.get('c'):
                             inner(element)
+                            n = nodes[self.depth][-1]
+                            n.attr['list'] = 'unordered'
                     else:
                         # But do increase the depth when a BulletList
                         # follows anything else.
@@ -88,6 +94,8 @@ class PandocOPML(object):
                         self.depth += 1
                         for element in obj.get('c'):
                             inner(element)
+                            n = nodes[self.depth][-1]
+                            n.attr['list'] = 'unordered'
                         self.depth -= 1
 
                 elif obj.get('t') == 'Header':
