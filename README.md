@@ -118,8 +118,6 @@ To override the `name` attribute, explicitly set the unique identifier:
 # Hello World {#custom-id}
 ```
 
-which produces:
-
 ```xml
 <outline level="1" name="custom-id" text="Hello World"/>
 ```
@@ -132,8 +130,6 @@ the resulting OPML:
 ```markdown
 # Hello World {#custom-id .draft category=demo}
 ```
-
-would produce:
 
 ```xml
 <outline level="1" name="custom-id" text="Hello World" draft="true" category="demo"/>
@@ -172,8 +168,6 @@ Example:
 1) Hello World
 2) This is a test
 ```
-
-produces
 
 ```xml
 <outline list="unordered" text="Hello World"/>
