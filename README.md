@@ -34,7 +34,7 @@ After running it through `pandoc-opml`, you'd have this OPML document:
     <ownerName>Eric Davis</ownerName>
     <dateModified>Tue, 13 Jan 2015 04:21:33 GMT</dateModified>
     <generator>https://github.com/edavis/pandoc-opml</generator>
-    <docs>http://dev.opml.org/spec2.html</docs>
+    <docs>https://github.com/edavis/pandoc-opml#docs</docs>
   </head>
   <body>
     <outline level="1" name="hello-world" text="Hello World!">
