@@ -102,8 +102,7 @@ That said, a few things to note:
   OPML `head` element.
 - `dateCreated` uses the `date` metadata (if provided) while
   `dateModified` is the date and time the conversion took place.
-- A `text` attribute can contain encoded HTML markup if encountered in
-  the source document.
+- A `text` attribute can contain encoded HTML markup.
 
 Background
 ----------
