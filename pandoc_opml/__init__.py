@@ -101,6 +101,7 @@ class PandocOPML(object):
                 elif obj.get('t') == 'Header':
                     level, attr, content = obj.get('c')
                     outline_attr = self.extract_header_attributes(attr)
+                    outline_attr['level'] = str(level)
                     node = Node(self.extract(content), outline_attr)
                     self.depth = level - 1
 
