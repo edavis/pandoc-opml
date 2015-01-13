@@ -35,20 +35,22 @@ class PandocOPML(object):
 
     def parse(self):
         nodes = []
+
+        def add_node(node):
+            try:
+                nodes[self.depth].append(node)
+            except IndexError:
+                nodes.append([node])
+
+            if self.depth > 0:
+                parent = nodes[self.depth - 1][-1]
+                parent.append(node)
+
         def inner(content):
             for obj in content:
                 if obj.get('t') in {'Para', 'Plain'}:
                     node = Node(self.extract(obj.get('c')))
-
-                    try:
-                        nodes[self.depth].append(node)
-                    except IndexError:
-                        nodes.append([node])
-
-                    if self.depth > 0:
-                        parent = nodes[self.depth - 1][-1]
-                        parent.append(node)
-
+                    add_node(node)
                     self.el = obj.get('t')
 
                 elif obj.get('t') == 'OrderedList':
@@ -105,14 +107,7 @@ class PandocOPML(object):
                     node = Node(self.extract(content), outline_attr)
                     self.depth = level - 1
 
-                    try:
-                        nodes[self.depth].append(node)
-                    except IndexError:
-                        nodes.append([node])
-
-                    if self.depth > 0:
-                        parent = nodes[self.depth - 1][-1]
-                        parent.append(node)
+                    add_node(node)
 
                     # the next elements are children of this header
                     self.depth += 1
