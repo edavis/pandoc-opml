@@ -85,16 +85,25 @@ $ pandoc-opml [-o <output.opml>] <input.txt>
 
 If `-o/--output` is not provided, the output is written to stdout.
 
-Spec
+Docs
 ----
 
-- Follows OPML v2.0 spec
-- Includes level header on header elements
-- Includes ordered or unordered on list items
-- Includes ordinal attribute on ordered list specifying the ordinal number of the list item
-- description, if included, is added to head
-- date maps to dateCreated, dateModified is the current GMT
-- HTML encoding is done if encountered
+pandoc-opml tries to follow the [OPML v2.0][OPML] specification as
+closely as possible.
+
+That said, a few things to note:
+
+- A `level` attribute is included on header elements. The number is
+  the HTML level (e.g., `1` for h1, `2` for h2, etc).
+- Unordered list items have a `list="unordered"` attribute.
+- Ordered list items have a `list="ordered"` attribute along with an
+  `ordinal` attribute specifying the ordinal number of the list item.
+- If `description` is provided in the metadata, it is included in the
+  OPML `head` element.
+- `dateCreated` uses the `date` metadata (if provided) while
+  `dateModified` is the date and time the conversion took place.
+- A `text` attribute can contain encoded HTML markup if encountered in
+  the source document.
 
 Background
 ----------
