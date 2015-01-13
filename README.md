@@ -93,8 +93,8 @@ closely as possible.
 
 That said, a few things to note:
 
-- A `level` attribute is included on header elements. The number is
-  the HTML level (e.g., `1` for h1, `2` for h2, etc).
+- Header elements include a `level` and `name` attribute. See below for
+  more information on these.
 - Unordered list items have a `list="unordered"` attribute.
 - Ordered list items have a `list="ordered"` attribute along with an
   `ordinal` attribute specifying the ordinal number of the list item.
@@ -103,6 +103,48 @@ That said, a few things to note:
 - `dateCreated` uses the `date` metadata (if provided) while
   `dateModified` is the date and time the conversion took place.
 - A `text` attribute can contain encoded HTML markup.
+
+### Headers
+
+The `level` attribute is the HTML level for the given header
+element. For example `1` for h1, `2` for h2, etc.
+
+Each header is assigned a unique identifier according to
+[these rules][unique-ids] and that identifier is stored as the `name`
+attribute.
+
+To override the `name` attribute, explicitly set the unique identifier:
+
+```markdown
+# Hello World {#custom-id}
+```
+
+which produces:
+
+```xml
+<outline level="1" name="custom-id" text="Hello World"/>
+```
+
+### Attributes
+
+If you specify [header attributes], pandoc-opml will include them in
+the resulting OPML:
+
+```markdown
+# Hello World {#custom-id .draft category=demo}
+```
+
+would produce:
+
+```xml
+<outline level="1" name="custom-id" text="Hello World" draft="true" category="demo"/>
+```
+
+Class header attributes have the value of "true" while key/value
+header attributes are included as-is.
+
+[header attributes]: http://johnmacfarlane.net/pandoc/README.html#extension-header_attributes
+[unique-ids]: http://johnmacfarlane.net/pandoc/README.html#extension-auto_identifiers
 
 Background
 ----------
