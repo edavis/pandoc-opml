@@ -47,21 +47,22 @@ After running it through `pandoc-opml`, you'd have this OPML document:
 Alright, so I've taken the simplicity of Markdown and turned it into a
 jumble of XML. What's so great about this?
 
-Well, think of what an XML representation of your Markdown now
-enables.
+Well, think of what an XML version of your Markdown now enables.
 
 Say you wanted to grab all level 1 and level 2 headlines from a
 Markdown document to put together a table of contents.
 
-All the widely used Markdown parsers seem to focus primarily on
+All the widely used Markdown libraries seem to focus primarily on
 transforming Markdown into HTML, so no help there. Beyond that, you
 could try writing a regex to extract the headers but [that path is
-brittle][jwz].
+brittle and a bit involved][jwz].
 
-What if instead you could transform your Markdown into the *lingua
-franca* of machine-readable markup languages and with it gain all the
-tools and libraries that natively work with XML? Then your "grab all
-level 1 and level 2 headers" task would become a breeze.
+What if instead you could transform your Markdown into XML and gain
+with it all the tools and libraries that natively work with XML? Then
+your "grab all level 1 and level 2 headers" task would be a breeze.
+
+pandoc-opml is the tool to transform your Markdown into OPML, the XML
+dialect widely used for storing hierarchical documents.
 
 [jwz]: http://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/
 
