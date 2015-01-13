@@ -55,7 +55,7 @@ Markdown document to put together a table of contents.
 All the widely used Markdown libraries seem to focus primarily on
 transforming Markdown into HTML, so no help there. Beyond that, you
 could try writing a regex to extract the headers but [that path is
-brittle and full of pain][jwz].
+brittle and full of pain][regex quote].
 
 What if instead you could transform your Markdown into XML and gain
 with it all the tools and libraries that natively work with XML? Then
@@ -63,7 +63,7 @@ your "grab all level 1 and level 2 headers" task would be a breeze.
 
 pandoc-opml is the tool to do just that.
 
-[jwz]: http://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/
+[regex quote]: http://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/
 
 Installation
 ------------
@@ -88,30 +88,29 @@ If `-o/--output` is not provided, the output is written to stdout.
 Docs
 ----
 
-pandoc-opml tries to follow the [OPML v2.0][OPML] specification as
-closely as possible.
+pandoc-opml makes every effort to follow the [OPML v2.0][OPML]
+specification as closely as possible.
 
-That said, a few things to note:
+However, Markdown is a rich format so some additional information
+about the source elements are stored as attributes.
 
-- Header elements include a `level` and `name` attribute. See below for
-  more information on these.
-- Unordered list items have a `list="unordered"` attribute.
-- Ordered list items have a `list="ordered"` attribute along with an
-  `ordinal` attribute specifying the ordinal number of the list item.
-- If `description` is provided in the metadata, it is included in the
-  OPML `head` element.
-- `dateCreated` uses the `date` metadata (if provided) while
-  `dateModified` is the date and time the conversion took place.
-- A `text` attribute can contain encoded HTML markup.
+A good OPML parser should ignore anything it doesn't understand, so
+none of this should be a problem. Please file a bug report if any
+problems do arise.
 
 ### Headers
+
+The OPML of Markdown [headline elements][headlines] includes two
+attributes: `level` and `name`.
 
 The `level` attribute is the HTML level for the given header
 element. For example `1` for h1, `2` for h2, etc.
 
-Each header is assigned a unique identifier according to
-[these rules][unique-ids] and that identifier is stored as the `name`
-attribute.
+The `name` attribute is the unique identifier assigned according to
+[these rules][unique ids].
+
+[headlines]: http://johnmacfarlane.net/pandoc/README.html#headers
+[unique ids]: http://johnmacfarlane.net/pandoc/README.html#extension-auto_identifiers
 
 To override the `name` attribute, explicitly set the unique identifier:
 
@@ -143,8 +142,84 @@ would produce:
 Class header attributes have the value of "true" while key/value
 header attributes are included as-is.
 
+Later attributes overwrite earlier ones. For example:
+
+```markdown
+# Hello World {#unique-id .name name=example}
+```
+
+First, `name=unique-id`. Then, the class attribute sets
+`name=true`. Then, the key/value attribute sets `name=example`. In the
+resulting OPML, `name` will equal `example`.
+
 [header attributes]: http://johnmacfarlane.net/pandoc/README.html#extension-header_attributes
-[unique-ids]: http://johnmacfarlane.net/pandoc/README.html#extension-auto_identifiers
+
+### Lists
+
+[Unordered list items][unordered lists] have a `list` attribute set to
+`unordered`.
+
+[Ordered list items][ordered lists] have a `list` attribute set to
+`ordered` and an `ordinal` attribute set to the ordinal number of the
+list item.
+
+Example:
+
+```markdown
+- Hello World
+- This is a test
+
+1) Hello World
+2) This is a test
+```
+
+produces
+
+```xml
+<outline list="unordered" text="Hello World"/>
+<outline list="unordered" text="This is a test"/>
+
+<outline list="ordered" ordinal="1" text="Hello World"/>
+<outline list="ordered" ordinal="2" text="This is a test"/>
+```
+
+[list elements]: http://johnmacfarlane.net/pandoc/README.html#lists
+[unordered lists]: http://johnmacfarlane.net/pandoc/README.html#bullet-lists
+[ordered lists]: http://johnmacfarlane.net/pandoc/README.html#ordered-lists
+
+### Metadata
+
+If `description` is included in the [metadata], it is included as a
+`<description>` element in the OPML's `<head>`.
+
+If `date` is included, it is included as the `<dateCreated>` element
+in the OPML's `<head>`.
+
+The `<dateModified>` element is the timestamp of when `pandoc-opml`
+created the OPML.
+
+All the other metadata (e.g., title, author, email, etc.) maps to the
+standard OPML `<head>` elements.
+
+If more than one author is provided, a single `<ownerName>` element is
+created with the names comma delimited.
+
+[metadata]: http://johnmacfarlane.net/pandoc/README.html#metadata-blocks
+
+### HTML
+
+If the source Markdown contains formatting, the respective OPML `text`
+attribute will contain encoded HTML markup:
+
+```markdown
+This paragraph contains *emphasis* and **strong** formatting along
+with `code` and H~2~O (subscripts) and 2^10^ (superscripts) and last,
+but not least, ~~deleted text~~.
+```
+
+```xml
+<outline text="This paragraph contains &lt;em&gt;emphasis&lt;/em&gt; and &lt;strong&gt;strong&lt;/strong&gt; formatting along with &lt;code&gt;code&lt;/code&gt; and H&lt;sub&gt;2&lt;/sub&gt;O (subscripts) and 2&lt;sup&gt;10&lt;/sup&gt; (superscripts) and last, but not least, &lt;del&gt;deleted text&lt;/del&gt;."/>
+```
 
 Background
 ----------
