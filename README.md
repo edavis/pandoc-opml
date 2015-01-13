@@ -3,6 +3,10 @@ pandoc-opml
 
 pandoc-opml generates [OPML] files from [Markdown] with the help of [pandoc].
 
+[OPML]: http://dev.opml.org/spec2.html
+[Markdown]: http://johnmacfarlane.net/pandoc/README.html#pandocs-markdown
+[pandoc]: http://johnmacfarlane.net/pandoc/
+
 Demo
 ----
 
@@ -43,8 +47,23 @@ After running it through `pandoc-opml`, you'd have this OPML document:
 Alright, so I've taken the simplicity of Markdown and turned it into a
 jumble of XML. What's so great about this?
 
-Well, think of what an XML representation of your Markdown documents
-now enables.
+Well, think of what an XML representation of your Markdown now
+enables.
+
+Say you wanted to grab all level 1 and level 2 headlines from a
+Markdown document to put together a table of contents.
+
+All the widely used Markdown parsers seem to focus primarily on
+transforming Markdown into HTML, so no help there. Beyond that, you
+could try writing a regex to extract the headers but [that path is
+brittle][jwz].
+
+What if instead you could transform your Markdown into the *lingua
+franca* of machine-readable markup languages and with it gain all the
+tools and libraries that natively work with XML? Then your "grab all
+level 1 and level 2 headers" task would become a breeze.
+
+[jwz]: http://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/
 
 Installation
 ------------
@@ -95,7 +114,4 @@ syntax tree (AST) that represented the input file's headers,
 paragraphs, list items, etc. Plus, by using pandoc, I could write the
 input files in any of the [many file formats it understands][inputs].
 
-[OPML]: http://dev.opml.org/spec2.html
-[Markdown]: http://johnmacfarlane.net/pandoc/README.html#pandocs-markdown
-[pandoc]: http://johnmacfarlane.net/pandoc/
 [inputs]: http://johnmacfarlane.net/pandoc/README.html#description
