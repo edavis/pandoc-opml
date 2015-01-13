@@ -55,7 +55,7 @@ Markdown document to put together a table of contents.
 All the widely used Markdown libraries seem to focus primarily on
 transforming Markdown into HTML, so no help there. Beyond that, you
 could try writing a regex to extract the headers but [that path is
-brittle and a bit of a hassle][jwz].
+brittle and full of pain][jwz].
 
 What if instead you could transform your Markdown into XML and gain
 with it all the tools and libraries that natively work with XML? Then
