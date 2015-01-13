@@ -61,8 +61,7 @@ What if instead you could transform your Markdown into XML and gain
 with it all the tools and libraries that natively work with XML? Then
 your "grab all level 1 and level 2 headers" task would be a breeze.
 
-pandoc-opml is the tool to transform your Markdown into OPML, the XML
-dialect widely used for storing hierarchical documents.
+pandoc-opml is the tool to do just that.
 
 [jwz]: http://blog.codinghorror.com/regular-expressions-now-you-have-two-problems/
 
