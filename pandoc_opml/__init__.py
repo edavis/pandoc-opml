@@ -25,10 +25,11 @@ class Node(object):
 class PandocOPML(object):
     def __init__(self, json_ast=None):
         if json_ast is None:
-            self.head, self.body = json.loads(sys.stdin.read())
+            doc_dict = json.loads(sys.stdin.read())
         else:
-            self.head, self.body = json.loads(json_ast)
-        self.head = self.head['unMeta']
+            doc_dict = json.loads(json_ast)
+        self.head = doc_dict["meta"]
+        self.body = doc_dict["blocks"]
         self.depth = 0
         self.el = None
         self.nodes = self.parse()
@@ -198,7 +199,7 @@ class PandocOPML(object):
             elif obj.get('t') == 'Space':
                 ret.append(' ')
             elif obj.get('t') == 'Link':
-                content, (link_url, link_title) = obj.get('c')
+                link_title, content, link_url = obj.get('c')
                 text = self.extract(content)
                 if link_title:
                     ret.append(r'<a href="%s" title="%s">%s</a>' % (link_url, link_title, text))
