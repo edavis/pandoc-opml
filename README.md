@@ -71,7 +71,7 @@ Installation
 I'll eventually toss this up on PyPI, but for now:
 
 ```bash
-$ pip install https://github.com/edavis/pandoc-opml
+$ pip install git+https://github.com/edavis/pandoc-opml
 ```
 
 The only external requirement is [pandoc].
